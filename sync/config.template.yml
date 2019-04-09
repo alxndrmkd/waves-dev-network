@@ -1,0 +1,18 @@
+nodeAddress: ${NODE_API_URL}
+onConflict: update
+blocksPerRequest: 100
+blocksPerUpdate: 5
+updateStrategy:
+  - interval: 1000
+    blocks: 2
+  - interval: 60000
+    blocks: 10
+  - interval: 600000
+    blocks: 100
+updateThrottleInterval: 500
+rollbackMonitorThrottleInterval: 300000
+postgresHost: ${PGHOST}
+postgresPort: ${PGPORT}
+postgresDatabase: ${PGDATABASE}
+postgresUser: ${PGUSER}
+postgresPassword: ${PGPASSWORD}

@@ -1,0 +1,77 @@
+version: '3.1'
+
+services:
+  postgres:
+    build: ./postgres
+    restart: always
+    environment:
+      POSTGRES_DB: dev
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: pw
+    ports:
+    - "5432:5432"
+  node1:
+    image: wavesplatform/node-dev
+    environment:
+      WAVES_CONFIG_FILE: "/waves-conf/waves-custom.conf"
+      WAVES_OPTS: "-Dwaves.wallet.seed=6e9UARzacFcePA -Dwaves.wallet.password='#ride_the_hack1'"
+    restart: always
+    ports:
+      - "16869:6869"
+    volumes:
+      - ./node/configs:/waves-conf
+  node2:
+    image: wavesplatform/node-dev
+    environment:
+      WAVES_CONFIG_FILE: "/waves-conf/waves-custom.conf"
+      WAVES_OPTS: "-Dwaves.wallet.seed=6e9UARzacFcePB -Dwaves.wallet.password='#ride_the_hack2'"
+    restart: always
+    ports:
+      - "26869:6869"
+    volumes:
+      - ./node/configs:/waves-conf
+  node3:
+    image: wavesplatform/node-dev
+    environment:
+      WAVES_CONFIG_FILE: "/waves-conf/waves-custom.conf"
+      WAVES_OPTS: "-Dwaves.wallet.seed=6e9UARzacFcePC -Dwaves.wallet.password='#ride_the_hack3'"
+    restart: always
+    ports:
+      - "36869:6869"
+    volumes:
+      - ./node/configs:/waves-conf
+#  sync:
+#    build: ./sync
+#    environment:
+#      NODE_API_URL: "http://node1:6869"
+#      PGHOST: postgres
+#      PGPORT: 5432
+#      PGUSER: username
+#      PGDATABASE: dev
+#      PGPASSWORD: pw
+#    depends_on:
+#      - "postgres"
+#      - "node1"
+#  data-service:
+#    build: ./data-service
+#    environment:
+#      PORT: 3000
+#      PGHOST: postgres
+#      PGPORT: 5432
+#      PGUSER: username
+#      PGDATABASE: dev
+#      PGPASSWORD: pw
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - "sync"
+  explorer:
+    build: ./explorer
+    environment:
+      NODE_API_URL: http://localhost:16869
+      BLOCKCHAIN_NAME: HackChain
+    ports:
+      - "8080:8080"
+    depends_on:
+      - "node1"
+
